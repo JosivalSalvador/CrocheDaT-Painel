@@ -7,7 +7,6 @@ import { ToastContainer } from "react-toastify";
 import Navbar from "./components/Navbar/Navbar";
 import { ReactQueryClientProvider } from './components/ReactQueryClient/ReactQueryClient';
 import { ProdutosProvider } from './components/produtosProvider/produtosProvider';
-import { CarrinhoProvider } from './components/carrinhoProvider/carrinhoProvider';
 
 export const metadata: Metadata = {
   title: "Crochê da T",
@@ -26,12 +25,10 @@ export default function RootLayout({
       <body>
         <ReactQueryClientProvider>
             <ProdutosProvider>
-              <CarrinhoProvider>
                 <Navbar />
                 {children}
                 <BootstrapClient />
                 <ToastContainer />
-              </CarrinhoProvider>
             </ProdutosProvider>
         </ReactQueryClientProvider>
       </body>
