@@ -3,11 +3,9 @@
 import Image from "next/image";
 import { useParams } from "next/navigation";
 import { useProdutosContext } from "@/app/components/produtosProvider/produtosProvider";
-import { useCarrinhoContext } from "@/app/components/carrinhoProvider/carrinhoProvider";
 
 export default function Produto() {
   const { produtos, isLoading, isError } = useProdutosContext();
-  const { adicionarAoCarrinho, verificaCarrinho } = useCarrinhoContext();
   const params = useParams();
   const nomeProduto = params?.produto as string;
 
@@ -32,7 +30,6 @@ export default function Produto() {
     );
   }
 
-  const estaNoCarrinho = verificaCarrinho(produto);
 
   return (
     <main className="bg-light py-5">
@@ -77,17 +74,6 @@ export default function Produto() {
               <div className="card-body d-flex flex-column">
                 <h1 className="card-title fw-bold mb-2">{produto.name}</h1>
                 <h4 className="text-success mb-4">R$ {produto.price}</h4>
-
-                <button
-                  className={`btn ${
-                    estaNoCarrinho ? "btn-success" : "btn-outline-warning"
-                  } w-100 mb-4`}
-                  onClick={() => adicionarAoCarrinho(produto)}
-                  disabled={estaNoCarrinho}
-                >
-                  <i className="bi bi-cart me-2"></i>
-                  {estaNoCarrinho ? "Produto no carrinho" : "Adicionar ao carrinho"}
-                </button>
 
                 <ul className="list-group list-group-flush mb-3">
                   <li className="list-group-item">
