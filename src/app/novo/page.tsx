@@ -73,7 +73,7 @@ export default function NovoProdutoPage() {
 
         <form
           onSubmit={handleSubmit}
-          className="card bg-secondary text-light p-4 rounded-4 shadow-sm"
+          className="card bg-info text-light p-4 rounded-4 shadow-sm"
         >
           {/* Nome */}
           <div className="mb-3">
