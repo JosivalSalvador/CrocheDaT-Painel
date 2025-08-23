@@ -1,35 +1,16 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { logout, getSession } from "@/app/services/auth";
+import { useAuth } from "../authProvider/authProvider";
 
 export default function Navbar() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const { isAuthenticated, handleLogout } = useAuth();
   const router = useRouter();
 
-  useEffect(() => {
-    const checkSession = async () => {
-      try {
-        const data = await getSession();
-        console.log("Sessão:", data);
-        setIsAuthenticated(data.authenticated);
-      } catch (err) {
-        console.error("Erro ao verificar sessão:", err);
-      }
-    };
-    checkSession();
-  }, []);
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-      setIsAuthenticated(false);
-      router.push("/");
-    } catch (err) {
-      console.error("Erro ao sair:", err);
-    }
+  const onLogout = async () => {
+    await handleLogout();
+    router.push("/");
   };
 
   return (
@@ -55,7 +36,7 @@ export default function Navbar() {
         <div className="d-flex">
           {isAuthenticated ? (
             <button
-              onClick={handleLogout}
+              onClick={onLogout}
               className="btn btn-outline-light rounded-pill px-4 py-2 fw-semibold nav-btn"
             >
               <i className="bi bi-box-arrow-right me-1"></i> Logout
