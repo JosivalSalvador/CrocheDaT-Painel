@@ -1,8 +1,13 @@
 "use client";
 
 import ListagemProdutos from "./components/ListagemProdutos/ListagemProdutos";
+import { useRouter } from "next/navigation";
+
 
 export default function App() {
+
+  const router = useRouter();
+  
   return (
     <main className="bg-dark min-vh-100 py-5 text-light">
       <div className="container">
@@ -12,7 +17,7 @@ export default function App() {
             <i className="bi bi-box-seam me-2 text-warning"></i>
             Painel de Produtos
           </h1>
-          <button className="btn btn-warning fw-semibold shadow-sm">
+          <button className="btn btn-warning fw-semibold shadow-sm" onClick={() => router.push("/novo")} >
             <i className="bi bi-plus-circle me-1"></i> Adicionar Produto
           </button>
         </div>
