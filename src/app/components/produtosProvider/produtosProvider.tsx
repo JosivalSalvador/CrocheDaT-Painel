@@ -3,6 +3,7 @@
 import { useQuery } from "@tanstack/react-query"; 
 import { getListaProduto } from "../../services/produtos";
 import { createContext, useContext, ReactNode } from "react";
+import { Produto } from '../../types/produto';
 
 type ProdutosContextType = {
   produtos: Produto[];

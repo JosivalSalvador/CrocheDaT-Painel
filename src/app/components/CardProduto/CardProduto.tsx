@@ -1,5 +1,7 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { Produto } from '../../types/produto';
+
 
 interface CardProdutoProps {
   produto: Produto;
@@ -32,7 +34,7 @@ export default function CardProduto({
           >
             <Image
               src={produto.photos[0].src}
-              alt={produto.photos[0].titulo}
+              alt={produto.photos[0].title}
               fill
               className="w-100 h-100"
               style={{ objectFit: "cover" }}
