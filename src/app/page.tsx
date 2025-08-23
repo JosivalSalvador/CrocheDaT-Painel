@@ -60,7 +60,7 @@ export default function App() {
         </div>
 
         {/* LISTAGEM DE PRODUTOS */}
-        <div className="card bg-secondary text-light shadow-sm border-0 rounded-4">
+        <div className="card bg-dark text-light shadow-sm border-0 rounded-4">
           <div className="card-body">
             <ListagemProdutos />
           </div>
