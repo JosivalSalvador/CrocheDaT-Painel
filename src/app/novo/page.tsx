@@ -36,7 +36,7 @@ export default function NovoProdutoPage() {
     const { name, value } = e.target;
     setForm((prev) => ({
       ...prev,
-      [name]: name === "price" ? Number(value) || 0 : value,
+      [name]: name === "price" ? value.replace(",", ".") : value,
     }));
   };
 
