@@ -55,9 +55,8 @@ export default function ListagemProdutos() {
             Object.entries(produtosPorCategoria).map(([categoria, lista]) => (
               <div
                 key={categoria}
-                className="mb-4 p-4 rounded"
+                className="mb-4 p-4 bg-dark rounded"
                 style={{
-                  backgroundColor: "#fffdfb",
                   boxShadow: "0 4px 12px rgba(0, 0, 0, 0.06)",
                   border: "1px solid #e7cfa3",
                 }}
