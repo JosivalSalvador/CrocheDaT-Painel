@@ -7,6 +7,7 @@ import { ToastContainer } from "react-toastify";
 import Navbar from "./components/Navbar/Navbar";
 import { ReactQueryClientProvider } from './components/ReactQueryClient/ReactQueryClient';
 import { ProdutosProvider } from './components/produtosProvider/produtosProvider';
+import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
   title: "Crochê da T",
@@ -20,12 +21,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const cookieStore = cookies();
+  const hasSession = cookieStore.has("connect.sid");
   return (
     <html lang="pt-br">
       <body className="bg-dark">
         <ReactQueryClientProvider>
             <ProdutosProvider>
-                <Navbar />
+                <Navbar isAuthenticated={hasSession} />
                 {children}
                 <BootstrapClient />
                 <ToastContainer />
