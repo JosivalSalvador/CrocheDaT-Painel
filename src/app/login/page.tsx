@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { login } from "../services/auth";
+import { useAuth } from "../components/authProvider/authProvider";
 
 export default function LoginPage() {
   const [user, setEmail] = useState("");
@@ -10,6 +11,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState("");
   const router = useRouter();
+  const { setIsAuthenticated } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,7 +21,8 @@ export default function LoginPage() {
     try {
       const res = await login(user, password);
       if (res) {
-        router.push("/"); // redireciona pro painel ou página inicial
+        setIsAuthenticated(true);
+        router.push("/"); 
       }
     } catch (err) {
       setErro("Credenciais inválidas. Tente novamente.");
