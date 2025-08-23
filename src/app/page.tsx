@@ -4,56 +4,63 @@ import ListagemProdutos from "./components/ListagemProdutos/ListagemProdutos";
 
 export default function App() {
   return (
-    <main className="bg-light">
-
-      {/* HERO FULLSCREEN (Mantendo seu texto original) */}
-      <section
-        className="d-flex align-items-center justify-content-center text-center position-relative mb-5 px-3"
-        style={{
-          minHeight: "47vh", // melhor que 50vh em mobile
-          backgroundImage: "linear-gradient(135deg, #fbe6d4, #fdebd2, #f8d9c4)",
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          color: "#3e3e3e",
-        }}
-      >
-        <div
-          className="position-absolute top-0 start-0 w-100 h-100"
-          style={{
-            background:
-              "linear-gradient(to bottom, rgba(255, 215, 0, 0.15), rgba(255, 215, 0, 0.05), rgba(255, 215, 0, 0.15))",
-          }}
-        ></div>
-        <div className="position-relative z-1 container py-4">
-          <h1 className="fw-bold mb-3 fs-1 fs-md-1 fs-lg-display-4">
-            <i className="bi bi-stars me-2" style={{ color: "#FFD700" }}></i>
-            Crochê para brilhar nas festas de fim de ano
+    <main className="bg-dark min-vh-100 py-5 text-light">
+      <div className="container">
+        {/* TÍTULO DO PAINEL */}
+        <div className="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+          <h1 className="h3 fw-bold mb-3 mb-md-0">
+            <i className="bi bi-box-seam me-2 text-warning"></i>
+            Painel de Produtos
           </h1>
-          <p className="lead mb-0 fs-6 fs-md-5">
-            Amigo secreto, ceia em família ou virada do ano, nossas peças artesanais
-            são o presente perfeito e o toque final no seu visual.
-          </p>
+          <button className="btn btn-warning fw-semibold shadow-sm">
+            <i className="bi bi-plus-circle me-1"></i> Adicionar Produto
+          </button>
         </div>
-      </section>
 
-
-      {/* PRODUTOS EM DESTAQUE (EXATAMENTE como seu código original) */}
-      <section id="produtos" className="py-5 bg-light border-top border-3 border-warning-subtle shadow-sm">
-        <div className="container">
-          <div className="mb-5 text-center text-md-start">
-            <h2 className="display-6 fw-bold mb-3">
-              <span className="px-4 py-2 rounded-pill bg-warning-subtle text-dark shadow-sm">
-                <i className="bi bi-stars me-2" style={{ color: "#FFD700" }}></i>
-                Produtos em destaque para as festas
-              </span>
-            </h2>
+        {/* PAINEL DE INFORMAÇÕES */}
+        <div className="row g-4 mb-5">
+          <div className="col-12 col-md-4">
+            <div className="card bg-secondary text-light shadow-sm border-0 rounded-4 h-100">
+              <div className="card-body d-flex flex-column align-items-start">
+                <div className="d-flex align-items-center mb-2">
+                  <i className="bi bi-check-circle-fill text-success me-2 fs-4"></i>
+                  <h6 className="text-light mb-0">Produtos Ativos</h6>
+                </div>
+                <h3 className="fw-bold mt-2">128</h3>
+              </div>
+            </div>
           </div>
-          <div className="mt-5">
+          <div className="col-12 col-md-4">
+            <div className="card bg-secondary text-light shadow-sm border-0 rounded-4 h-100">
+              <div className="card-body d-flex flex-column align-items-start">
+                <div className="d-flex align-items-center mb-2">
+                  <i className="bi bi-exclamation-triangle-fill text-danger me-2 fs-4"></i>
+                  <h6 className="text-light mb-0">Estoque Baixo</h6>
+                </div>
+                <h3 className="fw-bold mt-2">14</h3>
+              </div>
+            </div>
+          </div>
+          <div className="col-12 col-md-4">
+            <div className="card bg-secondary text-light shadow-sm border-0 rounded-4 h-100">
+              <div className="card-body d-flex flex-column align-items-start">
+                <div className="d-flex align-items-center mb-2">
+                  <i className="bi bi-tags-fill text-info me-2 fs-4"></i>
+                  <h6 className="text-light mb-0">Categorias</h6>
+                </div>
+                <h3 className="fw-bold mt-2">9</h3>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* LISTAGEM DE PRODUTOS */}
+        <div className="card bg-secondary text-light shadow-sm border-0 rounded-4">
+          <div className="card-body">
             <ListagemProdutos />
           </div>
         </div>
-      </section>
-
+      </div>
     </main>
   );
 }
