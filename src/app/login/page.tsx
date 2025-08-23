@@ -5,8 +5,8 @@ import { useRouter } from "next/navigation";
 import { login } from "../services/auth";
 
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [senha, setSenha] = useState("");
+  const [user, setEmail] = useState("");
+  const [password, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState("");
   const router = useRouter();
@@ -17,7 +17,7 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const res = await login(email, senha);
+      const res = await login(user, password);
       if (res) {
         router.push("/"); // redireciona pro painel ou página inicial
       }
@@ -48,7 +48,7 @@ export default function LoginPage() {
                 type="text"
                 id="name"
                 className="form-control bg-dark text-light border-0"
-                value={email}
+                value={user}
                 onChange={(e) => setEmail(e.target.value)}
                 required
               />
@@ -62,7 +62,7 @@ export default function LoginPage() {
                 type="password"
                 id="senha"
                 className="form-control bg-dark text-light border-0"
-                value={senha}
+                value={password}
                 onChange={(e) => setSenha(e.target.value)}
                 required
               />
