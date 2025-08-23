@@ -1,16 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { createProduto } from "../services/produtos";
-import { getListaCategoria } from "../services/categoria";
-import { Categoria, ProdutoInput} from "../types/produto";
+import { useRouter, useParams } from "next/navigation";
+import { getListaCategoria } from "@/app/services/categoria";
+import { getProduto, updateProduto } from "@/app/services/produtos";
+import { Categoria, Produto, ProdutoInput } from "@/app/types/produto";
 
-
-
-export default function NovoProdutoPage() {
+export default function EditProdutoPage() {
   const router = useRouter();
+  const params = useParams<{ id: string }>();
+  const produtoId = params?.id;
+
   const [categorias, setCategorias] = useState<Categoria[]>([]);
+  const [loading, setLoading] = useState(true);
   const [form, setForm] = useState<ProdutoInput>({
     name: "",
     description: "",
@@ -21,14 +23,33 @@ export default function NovoProdutoPage() {
     categoryId: "",
   });
 
-  // busca categorias ao montar
+  // Carrega categorias + produto
   useEffect(() => {
-    getListaCategoria()
-      .then(setCategorias)
+    if (!produtoId) return;
+
+    Promise.all([getListaCategoria(), getProduto(produtoId)])
+      .then(([cats, produto]) => {
+        setCategorias(cats);
+        preencherForm(produto);
+      })
       .catch((err) => {
-        console.error("Erro ao carregar categorias:", err);
-      });
-  }, []);
+        console.error("Erro ao carregar dados:", err);
+        alert("Erro ao carregar informações do produto.");
+      })
+      .finally(() => setLoading(false));
+  }, [produtoId]);
+
+  const preencherForm = (produto: Produto) => {
+    setForm({
+      name: produto.name,
+      description: produto.description,
+      material: produto.material,
+      productionTime: produto.productionTime,
+      price: produto.price.toString(),
+      photos: produto.photos.map((f) => ({ title: f.title, src: f.src })),
+      categoryId: produto.categoryId,
+    });
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -55,20 +76,32 @@ export default function NovoProdutoPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!produtoId) return;
+
     try {
-      await createProduto(form); // payload no formato ProdutoInput
+      await updateProduto(produtoId, form);
       router.push("/");
     } catch (error) {
-      console.error("Erro ao criar produto:", error);
+      console.error("Erro ao atualizar produto:", error);
       alert("Erro ao salvar produto. Tente novamente.");
     }
   };
+
+  if (loading) {
+    return (
+      <main className="bg-dark min-vh-100 py-5 text-light d-flex justify-content-center align-items-center">
+        <div className="spinner-border text-warning" role="status">
+          <span className="visually-hidden">Carregando...</span>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="bg-dark min-vh-100 py-5 text-light">
       <div className="container">
         <h1 className="h3 fw-bold mb-4">
-          <i className="bi bi-plus-circle me-2 text-warning"></i> Novo Produto
+          <i className="bi bi-pencil-square me-2 text-warning"></i> Editar Produto
         </h1>
 
         <form
@@ -190,7 +223,7 @@ export default function NovoProdutoPage() {
 
           {/* Botão */}
           <button type="submit" className="btn btn-warning fw-semibold">
-            Salvar Produto
+            Atualizar Produto
           </button>
         </form>
       </div>

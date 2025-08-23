@@ -1,11 +1,13 @@
 import { produtosApi } from ".";
-import {Produto, ProdutoInput} from '../types/produto';
-
+import { ProdutoInput, Produto } from '../types/produto';
 
 export async function getListaProduto(): Promise<Produto[]> {
   return produtosApi.get("/products").then((res) => res.data);
 }
 
+export async function getProduto(id: string): Promise<Produto> {
+  return produtosApi.get(`/products/${id}`).then((res) => res.data);
+}
 
 export async function createProduto(produto: ProdutoInput): Promise<Produto> {
   return produtosApi.post("/products", produto).then((res) => res.data);
