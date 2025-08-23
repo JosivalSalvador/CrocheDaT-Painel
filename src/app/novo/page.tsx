@@ -16,7 +16,7 @@ export default function NovoProdutoPage() {
     description: "",
     material: "",
     productionTime: "",
-    price: 0,
+    price: "",
     photos: [{ title: "", src: "" }],
     categoryId: "",
   });

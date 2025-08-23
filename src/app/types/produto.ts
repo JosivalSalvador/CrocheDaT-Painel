@@ -34,7 +34,7 @@ export interface ProdutoInput {
   description: string;
   material: string;
   productionTime: string;
-  price: number;
+  price: string;
   photos: FotoInput[];
   categoryId: string;
 }
