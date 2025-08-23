@@ -13,6 +13,7 @@ export default function Navbar() {
     const checkSession = async () => {
       try {
         const data = await getSession();
+        console.log("Sessão:", data);
         setIsAuthenticated(data.authenticated);
       } catch (err) {
         console.error("Erro ao verificar sessão:", err);
