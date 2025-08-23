@@ -2,7 +2,7 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Produto } from "../../types/produto";
-import { deleteProduto } from "../../services/produtos"
+import { deleteProduto } from "../../services/produtos";
 
 interface CardProdutoProps {
   produto: Produto;
@@ -65,9 +65,7 @@ export default function CardProduto({
             >
               {produto.name}
             </h5>
-            <h6 className="text-success fw-bold mb-3">
-              R$ {produto.price}
-            </h6>
+            <h6 className="text-success fw-bold mb-3">R$ {produto.price}</h6>
           </div>
 
           <div className="d-flex gap-2 mt-2">
@@ -87,9 +85,13 @@ export default function CardProduto({
         </div>
       </div>
 
-      {/* Modal simples */}
+      {/* Modal global */}
       {showModal && (
-        <div className="modal d-block" tabIndex={-1}>
+        <div
+          className="modal fade show d-block"
+          style={{ backgroundColor: "rgba(0,0,0,0.5)" }}
+          tabIndex={-1}
+        >
           <div className="modal-dialog modal-dialog-centered">
             <div className="modal-content">
               <div className="modal-header">
@@ -101,7 +103,9 @@ export default function CardProduto({
                 />
               </div>
               <div className="modal-body">
-                <p>Tem certeza que deseja excluir <b>{produto.name}</b>?</p>
+                <p>
+                  Tem certeza que deseja excluir <b>{produto.name}</b>?
+                </p>
               </div>
               <div className="modal-footer">
                 <button
