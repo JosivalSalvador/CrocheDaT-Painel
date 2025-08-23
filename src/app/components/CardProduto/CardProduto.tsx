@@ -1,12 +1,12 @@
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Produto } from '../../types/produto';
-
+import { useState } from "react";
+import { Produto } from "../../types/produto";
+import { deleteProduto } from "../../services/produtos"
 
 interface CardProdutoProps {
   produto: Produto;
   mostrarImagem?: boolean;
-  mostrarBotao?: boolean;
 }
 
 export default function CardProduto({
@@ -14,9 +14,24 @@ export default function CardProduto({
   mostrarImagem = true,
 }: CardProdutoProps) {
   const router = useRouter();
+  const [showModal, setShowModal] = useState(false);
 
   const verDetalhesProduto = (id: string) => {
     router.push(`/produto/${id}`);
+  };
+
+  const editarProduto = (id: string) => {
+    router.push(`/edit/${id}`);
+  };
+
+  const confirmarDelete = async () => {
+    try {
+      await deleteProduto(produto.id);
+      setShowModal(false);
+      router.refresh(); // atualiza a página
+    } catch (error) {
+      console.error("Erro ao deletar produto:", error);
+    }
   };
 
   return (
@@ -27,7 +42,7 @@ export default function CardProduto({
             style={{
               position: "relative",
               width: "100%",
-              aspectRatio: "4 / 5", // de 4/3 para 1:1 (quadrado, imagem maior)
+              aspectRatio: "4 / 5",
               cursor: "pointer",
             }}
             onClick={() => verDetalhesProduto(produto.id)}
@@ -40,7 +55,6 @@ export default function CardProduto({
               style={{ objectFit: "cover" }}
             />
           </div>
-
         )}
 
         <div className="card-body d-flex flex-column justify-content-between">
@@ -56,8 +70,54 @@ export default function CardProduto({
             </h6>
           </div>
 
+          <div className="d-flex gap-2 mt-2">
+            <button
+              className="btn btn-sm btn-primary"
+              onClick={() => editarProduto(produto.id)}
+            >
+              Editar
+            </button>
+            <button
+              className="btn btn-sm btn-danger"
+              onClick={() => setShowModal(true)}
+            >
+              Excluir
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Modal simples */}
+      {showModal && (
+        <div className="modal d-block" tabIndex={-1}>
+          <div className="modal-dialog modal-dialog-centered">
+            <div className="modal-content">
+              <div className="modal-header">
+                <h5 className="modal-title">Confirmar exclusão</h5>
+                <button
+                  type="button"
+                  className="btn-close"
+                  onClick={() => setShowModal(false)}
+                />
+              </div>
+              <div className="modal-body">
+                <p>Tem certeza que deseja excluir <b>{produto.name}</b>?</p>
+              </div>
+              <div className="modal-footer">
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => setShowModal(false)}
+                >
+                  Cancelar
+                </button>
+                <button className="btn btn-danger" onClick={confirmarDelete}>
+                  Excluir
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
