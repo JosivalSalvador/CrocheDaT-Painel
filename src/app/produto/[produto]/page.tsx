@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { getProduto } from "@/app/services/produtos";
+import { getProduto } from "@/app/services/produtos"; // ajuste o path
 import { Produto } from "@/app/types/produto";
 
 export default function ProdutoDetalhe() {
@@ -29,9 +29,9 @@ export default function ProdutoDetalhe() {
 
   if (isLoading) {
     return (
-      <div className="container py-5 text-center">
-        <div className="spinner-border text-primary" role="status" />
-        <p className="mt-3 text-muted">Carregando produto...</p>
+      <div className="container py-5 text-center text-light">
+        <div className="spinner-border text-light" role="status" />
+        <p className="mt-3">Carregando produto...</p>
       </div>
     );
   }
@@ -47,14 +47,14 @@ export default function ProdutoDetalhe() {
   }
 
   return (
-    <main className="bg-light py-5">
+    <main className="bg-dark min-vh-100 py-5 text-light">
       <div className="container">
-        <h1 className="fw-bold mb-4">Detalhes do Produto</h1>
+        <h1 className="fw-bold mb-4">{produto.name}</h1>
 
         <div className="row g-4">
           {/* Fotos */}
           <div className="col-md-5">
-            <div className="card border-0 shadow-sm">
+            <div className="card bg-secondary text-light border-0 shadow-sm">
               <div className="card-body">
                 {produto.photos.length > 0 ? (
                   <div className="row g-2">
@@ -66,7 +66,7 @@ export default function ProdutoDetalhe() {
                             width: "100%",
                             aspectRatio: "2 / 3",
                             borderRadius: "0.375rem",
-                            border: "1px solid #dee2e6",
+                            border: "1px solid #444",
                             overflow: "hidden",
                           }}
                         >
@@ -93,66 +93,66 @@ export default function ProdutoDetalhe() {
 
           {/* Detalhes técnicos */}
           <div className="col-md-7">
-            <div className="card border-0 shadow-sm">
+            <div className="card bg-secondary text-light border-0 shadow-sm h-100">
               <div className="card-body">
-                <h2 className="fw-semibold">{produto.name}</h2>
                 <h4 className="text-success mb-4">R$ {produto.price}</h4>
 
-                <dl className="row">
-                  <dt className="col-sm-4">ID</dt>
-                  <dd className="col-sm-8">{produto.id}</dd>
+                <div className="row mb-3">
+                  <div className="col-sm-4 fw-semibold">ID</div>
+                  <div className="col-sm-8">{produto.id}</div>
+                </div>
 
-                  <dt className="col-sm-4">Descrição</dt>
-                  <dd className="col-sm-8">
+                <div className="row mb-3">
+                  <div className="col-sm-4 fw-semibold">Descrição</div>
+                  <div className="col-sm-8">
                     {(produto.description || "")
                       .replace(/\[[^\]]*\]/g, "")
                       .trim() || "Sem descrição"}
-                  </dd>
+                  </div>
+                </div>
 
-                  <dt className="col-sm-4">Observações</dt>
-                  <dd className="col-sm-8">
+                <div className="row mb-3">
+                  <div className="col-sm-4 fw-semibold">Observações</div>
+                  <div className="col-sm-8">
                     {(
                       (produto.description || "").match(/\[([^\]]*)\]/g) || []
                     )
                       .map((obs) => obs.replace(/[\[\]]/g, "").trim())
                       .join(". ") || "Sem observações"}
-                  </dd>
+                  </div>
+                </div>
 
-                  <dt className="col-sm-4">Material</dt>
-                  <dd className="col-sm-8">{produto.material || "-"}</dd>
+                <div className="row mb-3">
+                  <div className="col-sm-4 fw-semibold">Material</div>
+                  <div className="col-sm-8">{produto.material || "-"}</div>
+                </div>
 
-                  <dt className="col-sm-4">Tempo de Produção</dt>
-                  <dd className="col-sm-8">
+                <div className="row mb-3">
+                  <div className="col-sm-4 fw-semibold">Tempo Produção</div>
+                  <div className="col-sm-8">
                     {produto.productionTime || "-"}
-                  </dd>
+                  </div>
+                </div>
 
-                  <dt className="col-sm-4">Categoria</dt>
-                  <dd className="col-sm-8">
+                <div className="row mb-3">
+                  <div className="col-sm-4 fw-semibold">Categoria</div>
+                  <div className="col-sm-8">
                     {produto.category?.name || "Sem categoria"}
-                  </dd>
+                  </div>
+                </div>
 
-                  <dt className="col-sm-4">Criado em</dt>
-                  <dd className="col-sm-8">
+                <div className="row mt-4 border-top pt-3 text-muted small">
+                  <div className="col-sm-6">
+                    <strong>Criado em:</strong>{" "}
                     {new Date(produto.createdAt).toLocaleString()}
-                  </dd>
-
-                  <dt className="col-sm-4">Atualizado em</dt>
-                  <dd className="col-sm-8">
+                  </div>
+                  <div className="col-sm-6">
+                    <strong>Atualizado em:</strong>{" "}
                     {new Date(produto.updatedAt).toLocaleString()}
-                  </dd>
-                </dl>
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
-
-        {/* Debug opcional: dump do objeto */}
-        <div className="card mt-4 border-0 shadow-sm">
-          <div className="card-body">
-            <h5 className="fw-bold">Raw JSON</h5>
-            <pre className="small bg-light p-3 rounded border">
-              {JSON.stringify(produto, null, 2)}
-            </pre>
           </div>
         </div>
       </div>
