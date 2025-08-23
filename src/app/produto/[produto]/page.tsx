@@ -1,15 +1,31 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { useProdutosContext } from "@/app/components/produtosProvider/produtosProvider";
+import { getProduto } from "@/app/services/produtos";
+import { Produto } from "@/app/types/produto";
 
-export default function Produto() {
-  const { produtos, isLoading, isError } = useProdutosContext();
+export default function ProdutoDetalhe() {
   const params = useParams();
-  const nomeProduto = params?.produto as string;
+  const produtoId = params?.produto as string;
 
-  const produto = produtos.find((p) => p.id === nomeProduto || p.name === nomeProduto);
+  const [produto, setProduto] = useState<Produto | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isError, setIsError] = useState(false);
+
+  useEffect(() => {
+    if (!produtoId) return;
+
+    setIsLoading(true);
+    getProduto(produtoId)
+      .then((data) => {
+        setProduto(data);
+        setIsError(false);
+      })
+      .catch(() => setIsError(true))
+      .finally(() => setIsLoading(false));
+  }, [produtoId]);
 
   if (isLoading) {
     return (
@@ -30,81 +46,113 @@ export default function Produto() {
     );
   }
 
-
   return (
     <main className="bg-light py-5">
       <div className="container">
-        <div className="row g-5">
-          {/* Galeria */}
-          <div className="col-md-6">
+        <h1 className="fw-bold mb-4">Detalhes do Produto</h1>
+
+        <div className="row g-4">
+          {/* Fotos */}
+          <div className="col-md-5">
             <div className="card border-0 shadow-sm">
               <div className="card-body">
-                <div className="row g-2">
-                  {produto.photos.map((foto, index) => (
-                    <div className="col-6" key={index}>
-                      <div
-                        style={{
-                          position: "relative",
-                          width: "100%",
-                          aspectRatio: "2 / 3", 
-                          overflow: "hidden",
-                          borderRadius: "0.375rem", 
-                          border: "1px solid #dee2e6",
-                        }}
-                      >
-                        <Image
-                          src={foto.src}
-                          alt={foto.title}
-                          fill
-                          sizes="(max-width: 768px) 100vw, 50vw"
-                          style={{ objectFit: "cover" }}
-                        />
+                {produto.photos.length > 0 ? (
+                  <div className="row g-2">
+                    {produto.photos.map((foto, index) => (
+                      <div className="col-6" key={index}>
+                        <div
+                          style={{
+                            position: "relative",
+                            width: "100%",
+                            aspectRatio: "2 / 3",
+                            borderRadius: "0.375rem",
+                            border: "1px solid #dee2e6",
+                            overflow: "hidden",
+                          }}
+                        >
+                          <Image
+                            src={foto.src}
+                            alt={foto.title}
+                            fill
+                            sizes="(max-width: 768px) 100vw, 50vw"
+                            style={{ objectFit: "cover" }}
+                          />
+                        </div>
+                        <p className="small text-muted mt-1 mb-0">
+                          {foto.title}
+                        </p>
                       </div>
-                    </div>
-
-                  ))}
-                </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="text-muted">Sem imagens cadastradas</p>
+                )}
               </div>
             </div>
           </div>
 
-          {/* Detalhes */}
-          <div className="col-md-6">
-            <div className="card border-0 shadow-sm h-100">
-              <div className="card-body d-flex flex-column">
-                <h1 className="card-title fw-bold mb-2">{produto.name}</h1>
+          {/* Detalhes técnicos */}
+          <div className="col-md-7">
+            <div className="card border-0 shadow-sm">
+              <div className="card-body">
+                <h2 className="fw-semibold">{produto.name}</h2>
                 <h4 className="text-success mb-4">R$ {produto.price}</h4>
 
-                <ul className="list-group list-group-flush mb-3">
-                  <li className="list-group-item">
-                    <strong>Descrição:</strong> {(produto.description || "").replace(/\[[^\]]*\]/g, "").trim() || "Sem descrição"}
-                  </li>
-                  <li className="list-group-item">
-                    <strong>Material:</strong> {produto.material}
-                  </li>
-                  <li className="list-group-item">
-                    <strong>Tempo de produção:</strong> {produto.productionTime}
-                  </li>
-                  <li className="list-group-item">
-                    <strong>Categoria:</strong> {produto.category?.name || "Sem categoria"}
-                  </li>
-                  <li className="list-group-item">
-                    <strong>Observações:</strong> {((produto.description || "").match(/\[([^\]]*)\]/g) || []).map(obs => obs.replace(/[\[\]]/g, "").trim()).join(". ") || "Sem observações"}
-                  </li>
-                </ul>
+                <dl className="row">
+                  <dt className="col-sm-4">ID</dt>
+                  <dd className="col-sm-8">{produto.id}</dd>
 
-                <div className="text-muted small mt-auto pt-3 border-top">
-                  <p className="mb-1">
-                    <strong>Criado em:</strong>{" "}
-                    {new Date(produto.createdAt).toLocaleDateString()}
-                  </p>
-                  <p>
-                    <strong>Atualizado em:</strong>{" "}
-                    {new Date(produto.updatedAt).toLocaleDateString()}
-                  </p>
-                </div>
+                  <dt className="col-sm-4">Descrição</dt>
+                  <dd className="col-sm-8">
+                    {(produto.description || "")
+                      .replace(/\[[^\]]*\]/g, "")
+                      .trim() || "Sem descrição"}
+                  </dd>
+
+                  <dt className="col-sm-4">Observações</dt>
+                  <dd className="col-sm-8">
+                    {(
+                      (produto.description || "").match(/\[([^\]]*)\]/g) || []
+                    )
+                      .map((obs) => obs.replace(/[\[\]]/g, "").trim())
+                      .join(". ") || "Sem observações"}
+                  </dd>
+
+                  <dt className="col-sm-4">Material</dt>
+                  <dd className="col-sm-8">{produto.material || "-"}</dd>
+
+                  <dt className="col-sm-4">Tempo de Produção</dt>
+                  <dd className="col-sm-8">
+                    {produto.productionTime || "-"}
+                  </dd>
+
+                  <dt className="col-sm-4">Categoria</dt>
+                  <dd className="col-sm-8">
+                    {produto.category?.name || "Sem categoria"}
+                  </dd>
+
+                  <dt className="col-sm-4">Criado em</dt>
+                  <dd className="col-sm-8">
+                    {new Date(produto.createdAt).toLocaleString()}
+                  </dd>
+
+                  <dt className="col-sm-4">Atualizado em</dt>
+                  <dd className="col-sm-8">
+                    {new Date(produto.updatedAt).toLocaleString()}
+                  </dd>
+                </dl>
               </div>
             </div>
+          </div>
+        </div>
+
+        {/* Debug opcional: dump do objeto */}
+        <div className="card mt-4 border-0 shadow-sm">
+          <div className="card-body">
+            <h5 className="fw-bold">Raw JSON</h5>
+            <pre className="small bg-light p-3 rounded border">
+              {JSON.stringify(produto, null, 2)}
+            </pre>
           </div>
         </div>
       </div>
