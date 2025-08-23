@@ -54,7 +54,7 @@ export default function Produto() {
                       >
                         <Image
                           src={foto.src}
-                          alt={foto.titulo}
+                          alt={foto.title}
                           fill
                           sizes="(max-width: 768px) 100vw, 50vw"
                           style={{ objectFit: "cover" }}
