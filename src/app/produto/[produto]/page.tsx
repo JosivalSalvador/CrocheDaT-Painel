@@ -49,13 +49,16 @@ export default function ProdutoDetalhe() {
   return (
     <main className="bg-dark min-vh-100 py-5 text-light">
       <div className="container">
-        <h1 className="fw-bold mb-4">{produto.name}</h1>
+        {/* Cabeçalho */}
+        <h1 className="fw-bold mb-2">{produto.name}</h1>
+        <h3 className="text-success mb-5">R$ {produto.price}</h3>
 
-        <div className="row g-4">
+        <div className="row g-5">
           {/* Fotos */}
           <div className="col-md-5">
-            <div className="card bg-secondary text-light border-0 shadow-sm">
+            <div className="card bg-secondary border-0 shadow-sm">
               <div className="card-body">
+                <h5 className="fw-bold text-uppercase mb-3">Imagens</h5>
                 {produto.photos.length > 0 ? (
                   <div className="row g-2">
                     {produto.photos.map((foto, index) => (
@@ -78,7 +81,7 @@ export default function ProdutoDetalhe() {
                             style={{ objectFit: "cover" }}
                           />
                         </div>
-                        <p className="small text-muted mt-1 mb-0">
+                        <p className="small text-muted mt-1 mb-0 text-center">
                           {foto.title}
                         </p>
                       </div>
@@ -93,64 +96,59 @@ export default function ProdutoDetalhe() {
 
           {/* Detalhes técnicos */}
           <div className="col-md-7">
-            <div className="card bg-secondary text-light border-0 shadow-sm h-100">
+            <div className="card bg-secondary border-0 shadow-sm h-100">
               <div className="card-body">
-                <h4 className="text-success mb-4">R$ {produto.price}</h4>
+                <h5 className="fw-bold text-uppercase mb-3">Informações Gerais</h5>
+                <dl className="row mb-4">
+                  <dt className="col-sm-4 text-muted fw-semibold">ID</dt>
+                  <dd className="col-sm-8">{produto.id}</dd>
 
-                <div className="row mb-3">
-                  <div className="col-sm-4 fw-semibold">ID</div>
-                  <div className="col-sm-8">{produto.id}</div>
-                </div>
-
-                <div className="row mb-3">
-                  <div className="col-sm-4 fw-semibold">Descrição</div>
-                  <div className="col-sm-8">
+                  <dt className="col-sm-4 text-muted fw-semibold">Descrição</dt>
+                  <dd className="col-sm-8">
                     {(produto.description || "")
                       .replace(/\[[^\]]*\]/g, "")
                       .trim() || "Sem descrição"}
-                  </div>
-                </div>
+                  </dd>
 
-                <div className="row mb-3">
-                  <div className="col-sm-4 fw-semibold">Observações</div>
-                  <div className="col-sm-8">
+                  <dt className="col-sm-4 text-muted fw-semibold">Observações</dt>
+                  <dd className="col-sm-8">
                     {(
                       (produto.description || "").match(/\[([^\]]*)\]/g) || []
                     )
                       .map((obs) => obs.replace(/[\[\]]/g, "").trim())
                       .join(". ") || "Sem observações"}
-                  </div>
-                </div>
+                  </dd>
+                </dl>
 
-                <div className="row mb-3">
-                  <div className="col-sm-4 fw-semibold">Material</div>
-                  <div className="col-sm-8">{produto.material || "-"}</div>
-                </div>
+                <h5 className="fw-bold text-uppercase mb-3">Características</h5>
+                <dl className="row mb-4">
+                  <dt className="col-sm-4 text-muted fw-semibold">Material</dt>
+                  <dd className="col-sm-8">{produto.material || "-"}</dd>
 
-                <div className="row mb-3">
-                  <div className="col-sm-4 fw-semibold">Tempo Produção</div>
-                  <div className="col-sm-8">
+                  <dt className="col-sm-4 text-muted fw-semibold">Tempo Produção</dt>
+                  <dd className="col-sm-8">
                     {produto.productionTime || "-"}
-                  </div>
-                </div>
+                  </dd>
 
-                <div className="row mb-3">
-                  <div className="col-sm-4 fw-semibold">Categoria</div>
-                  <div className="col-sm-8">
+                  <dt className="col-sm-4 text-muted fw-semibold">Categoria</dt>
+                  <dd className="col-sm-8">
                     {produto.category?.name || "Sem categoria"}
-                  </div>
-                </div>
+                  </dd>
 
-                <div className="row mt-4 border-top pt-3 text-muted small">
-                  <div className="col-sm-6">
-                    <strong>Criado em:</strong>{" "}
+                </dl>
+
+                <h5 className="fw-bold text-uppercase mb-3">Histórico</h5>
+                <dl className="row">
+                  <dt className="col-sm-4 text-muted fw-semibold">Criado em</dt>
+                  <dd className="col-sm-8">
                     {new Date(produto.createdAt).toLocaleString()}
-                  </div>
-                  <div className="col-sm-6">
-                    <strong>Atualizado em:</strong>{" "}
+                  </dd>
+
+                  <dt className="col-sm-4 text-muted fw-semibold">Atualizado em</dt>
+                  <dd className="col-sm-8">
                     {new Date(produto.updatedAt).toLocaleString()}
-                  </div>
-                </div>
+                  </dd>
+                </dl>
               </div>
             </div>
           </div>
