@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "../authProvider/authProvider";
 
 export default function Navbar() {
-  const { isAuthenticated, handleLogout, user } = useAuth(); // 👈 agora pega o user também
+  const { isAuthenticated, handleLogout, user } = useAuth();
   const router = useRouter();
 
   const onLogout = async () => {
@@ -20,7 +20,14 @@ export default function Navbar() {
     >
       <div className="container-fluid">
         {/* Logo / Marca */}
-        <a href="/" className="navbar-brand d-flex align-items-center gap-2 me-auto">
+        <a
+          href="/"
+          onClick={(e) => {
+            e.preventDefault();
+            router.push("/");
+          }}
+          className="navbar-brand d-flex align-items-center gap-2 me-auto"
+        >
           <Image
             src="/icone.png"
             alt="Ícone"

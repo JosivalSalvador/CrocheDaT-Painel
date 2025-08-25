@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { login, getSession } from "../services/auth";
+import { login } from "../services/auth";
 import { useAuth } from "../components/authProvider/authProvider";
 
 export default function LoginPage() {
@@ -11,7 +11,7 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState("");
   const router = useRouter();
-  const { setUser } = useAuth(); // 👈 agora usa setUser do contexto
+  const { setUser } = useAuth(); // 👈 vai gravar direto no contexto
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,17 +19,14 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      // 1. Login no back (cria a sessão)
+      // 1. Faz login no backend (valida credenciais / cria cookie de sessão)
       await login(username, password);
 
-      // 2. Buscar a sessão pra recuperar o user (ex: "thayssa")
-      const session = await getSession();
-      if (session.authenticated) {
-        setUser(session.user); // 👈 salva no contexto
-        router.push("/");
-      } else {
-        setErro("Erro ao recuperar sessão. Tente novamente.");
-      }
+      // 2. Não precisa chamar getSession, já temos o username
+      setUser(username);
+
+      // 3. Redireciona
+      router.push("/");
     } catch (err) {
       setErro("Credenciais inválidas. Tente novamente.");
     } finally {
