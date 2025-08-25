@@ -3,14 +3,16 @@ import { createContext, useContext, useEffect, useState } from "react";
 import { getSession, logout } from "@/app/services/auth";
 
 type AuthContextType = {
+  user: string | null;
   isAuthenticated: boolean;
-  setIsAuthenticated: (value: boolean) => void;
+  setUser: (value: string | null) => void;
   handleLogout: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const [user, setUser] = useState<string | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
@@ -18,8 +20,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       try {
         const data = await getSession();
         setIsAuthenticated(data.authenticated);
+        setUser(data.authenticated ? data.user : null);
       } catch (err) {
         console.error("Erro ao verificar sessão:", err);
+        setIsAuthenticated(false);
+        setUser(null);
       }
     };
     checkSession();
@@ -29,13 +34,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await logout();
       setIsAuthenticated(false);
+      setUser(null);
     } catch (err) {
       console.error("Erro ao sair:", err);
     }
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated, handleLogout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, setUser, handleLogout }}>
       {children}
     </AuthContext.Provider>
   );

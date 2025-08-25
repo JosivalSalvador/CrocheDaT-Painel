@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "../authProvider/authProvider";
 
 export default function Navbar() {
-  const { isAuthenticated, handleLogout } = useAuth();
+  const { isAuthenticated, handleLogout, user } = useAuth(); // 👈 agora pega o user também
   const router = useRouter();
 
   const onLogout = async () => {
@@ -32,8 +32,12 @@ export default function Navbar() {
           <span className="fs-4 fw-bold text-light fst-italic">Crochê da T</span>
         </a>
 
-        {/* Botão Login / Logout */}
-        <div className="d-flex">
+        {/* Área à direita */}
+        <div className="d-flex align-items-center gap-3">
+          {isAuthenticated && user && (
+            <span className="text-light fw-semibold">Olá, {user}</span>
+          )}
+
           {isAuthenticated ? (
             <button
               onClick={onLogout}

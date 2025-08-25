@@ -2,16 +2,16 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { login } from "../services/auth";
+import { login, getSession } from "../services/auth";
 import { useAuth } from "../components/authProvider/authProvider";
 
 export default function LoginPage() {
-  const [user, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setSenha] = useState("");
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState("");
   const router = useRouter();
-  const { setIsAuthenticated } = useAuth();
+  const { setUser } = useAuth(); // 👈 agora usa setUser do contexto
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -19,10 +19,16 @@ export default function LoginPage() {
     setLoading(true);
 
     try {
-      const res = await login(user, password);
-      if (res) {
-        setIsAuthenticated(true);
-        router.push("/"); 
+      // 1. Login no back (cria a sessão)
+      await login(username, password);
+
+      // 2. Buscar a sessão pra recuperar o user (ex: "thayssa")
+      const session = await getSession();
+      if (session.authenticated) {
+        setUser(session.user); // 👈 salva no contexto
+        router.push("/");
+      } else {
+        setErro("Erro ao recuperar sessão. Tente novamente.");
       }
     } catch (err) {
       setErro("Credenciais inválidas. Tente novamente.");
@@ -33,7 +39,10 @@ export default function LoginPage() {
 
   return (
     <main className="d-flex align-items-center justify-content-center bg-dark min-vh-100">
-      <div className="card bg-secondary text-light shadow-lg border-0 rounded-4 p-4" style={{ maxWidth: "400px", width: "100%" }}>
+      <div
+        className="card bg-secondary text-light shadow-lg border-0 rounded-4 p-4"
+        style={{ maxWidth: "400px", width: "100%" }}
+      >
         <div className="card-body">
           <h2 className="fw-bold mb-4 text-center">
             <i className="bi bi-box-arrow-in-right text-warning me-2"></i>
@@ -51,8 +60,8 @@ export default function LoginPage() {
                 type="text"
                 id="name"
                 className="form-control bg-dark text-light border-0"
-                value={user}
-                onChange={(e) => setEmail(e.target.value)}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
                 required
               />
             </div>
