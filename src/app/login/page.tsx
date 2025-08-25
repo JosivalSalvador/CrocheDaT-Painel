@@ -7,11 +7,11 @@ import { useAuth } from "../components/authProvider/authProvider";
 
 export default function LoginPage() {
   const [username, setUsername] = useState("");
-  const [password, setSenha] = useState("");
+  const [password, setPassword] = useState(""); // 👈 renomeei para consistência
   const [loading, setLoading] = useState(false);
   const [erro, setErro] = useState("");
   const router = useRouter();
-  const { setUser } = useAuth(); // 👈 vai gravar direto no contexto
+  const { handleLogin } = useAuth(); // 👈 agora usa handleLogin
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,8 +22,8 @@ export default function LoginPage() {
       // 1. Faz login no backend (valida credenciais / cria cookie de sessão)
       await login(username, password);
 
-      // 2. Não precisa chamar getSession, já temos o username
-      setUser(username);
+      // 2. Usa handleLogin para gravar no contexto + sessionStorage
+      handleLogin(username);
 
       // 3. Redireciona
       router.push("/");
@@ -72,7 +72,7 @@ export default function LoginPage() {
                 id="senha"
                 className="form-control bg-dark text-light border-0"
                 value={password}
-                onChange={(e) => setSenha(e.target.value)}
+                onChange={(e) => setPassword(e.target.value)}
                 required
               />
             </div>

@@ -9,8 +9,12 @@ export default function Navbar() {
   const router = useRouter();
 
   const onLogout = async () => {
-    await handleLogout();
-    router.push("/");
+    try {
+      await handleLogout();
+      router.push("/");
+    } catch (err) {
+      console.error("Erro no logout:", err);
+    }
   };
 
   return (
@@ -20,13 +24,10 @@ export default function Navbar() {
     >
       <div className="container-fluid">
         {/* Logo / Marca */}
-        <a
-          href="/"
-          onClick={(e) => {
-            e.preventDefault();
-            router.push("/");
-          }}
-          className="navbar-brand d-flex align-items-center gap-2 me-auto"
+        <button
+          onClick={() => router.push("/")}
+          className="navbar-brand d-flex align-items-center gap-2 me-auto bg-transparent border-0 p-0"
+          style={{ cursor: "pointer" }}
         >
           <Image
             src="/icone.png"
@@ -37,7 +38,7 @@ export default function Navbar() {
             priority
           />
           <span className="fs-4 fw-bold text-light fst-italic">Crochê da T</span>
-        </a>
+        </button>
 
         {/* Área à direita */}
         <div className="d-flex align-items-center gap-3">

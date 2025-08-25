@@ -5,7 +5,7 @@ import { logout } from "@/app/services/auth"; // 👈 só mantemos logout se qui
 type AuthContextType = {
   user: string | null;
   isAuthenticated: boolean;
-  setUser: (value: string | null) => void;
+  handleLogin: (username: string) => void;
   handleLogout: () => Promise<void>;
 };
 
@@ -45,7 +45,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, setUser, handleLogout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, handleLogin, handleLogout }}>
       {!loading && children} {/* evita flash de "não logado" */}
     </AuthContext.Provider>
   );
