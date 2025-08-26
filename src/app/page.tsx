@@ -4,15 +4,15 @@ import ListagemProdutos from "./components/ListagemProdutos/ListagemProdutos";
 import { useRouter } from "next/navigation";
 import { useProdutosContext } from "./components/produtosProvider/produtosProvider";
 
-
 export default function App() {
   const router = useRouter();
   const { produtos } = useProdutosContext();
 
   // Totais
   const totalProdutos = produtos.length;
-  const categoriasUnicas = Array.from(new Set(produtos.map((p) => p.category?.name)));
-
+  const categoriasUnicas = Array.from(
+    new Set(produtos.map((p) => p.category?.name))
+  );
   const totalCategorias = categoriasUnicas.length;
 
   // Quantidade por categoria
@@ -44,41 +44,48 @@ export default function App() {
             <div className="row g-4">
               {/* Total de Produtos */}
               <div className="col-12 col-md-4">
-                <div className="d-flex align-items-center">
-                  <i className="bi bi-box-seam text-warning me-2 fs-3"></i>
-                  <div>
-                    <h6 className="mb-0">Total de Produtos</h6>
-                    <h3 className="fw-bold mt-1">{totalProdutos}</h3>
+                <div className="card bg-dark text-light shadow-sm border-0 rounded-4 h-100">
+                  <div className="card-body d-flex flex-column justify-content-center text-center">
+                    <i className="bi bi-box-seam text-warning fs-2 mb-2"></i>
+                    <h6 className="text-light mb-1">Total de Produtos</h6>
+                    <h3 className="fw-bold mb-0">{totalProdutos}</h3>
                   </div>
                 </div>
               </div>
 
               {/* Total de Categorias */}
               <div className="col-12 col-md-4">
-                <div className="d-flex align-items-center">
-                  <i className="bi bi-tags-fill text-info me-2 fs-3"></i>
-                  <div>
-                    <h6 className="mb-0">Total de Categorias</h6>
-                    <h3 className="fw-bold mt-1">{totalCategorias}</h3>
+                <div className="card bg-dark text-light shadow-sm border-0 rounded-4 h-100">
+                  <div className="card-body d-flex flex-column justify-content-center text-center">
+                    <i className="bi bi-tags-fill text-info fs-2 mb-2"></i>
+                    <h6 className="text-light mb-1">Total de Categorias</h6>
+                    <h3 className="fw-bold mb-0">{totalCategorias}</h3>
                   </div>
                 </div>
               </div>
 
               {/* Produtos por Categoria */}
               <div className="col-12 col-md-4">
-                <div>
-                  <div className="d-flex align-items-center mb-2">
-                    <i className="bi bi-diagram-3-fill text-success me-2 fs-3"></i>
-                    <h6 className="mb-0">Produtos por Categoria</h6>
+                <div className="card bg-dark text-light shadow-sm border-0 rounded-4 h-100">
+                  <div className="card-body">
+                    <div className="d-flex align-items-center mb-3">
+                      <i className="bi bi-diagram-3-fill text-success fs-4 me-2"></i>
+                      <h6 className="mb-0">Produtos por Categoria</h6>
+                    </div>
+                    <ul className="list-group list-group-flush">
+                      {produtosPorCategoria.map((item) => (
+                        <li
+                          key={item.categoria}
+                          className="list-group-item d-flex justify-content-between align-items-center bg-dark text-light border-0 px-0"
+                        >
+                          {item.categoria}
+                          <span className="badge bg-success rounded-pill">
+                            {item.qtd}
+                          </span>
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  <ul className="list-unstyled ms-1 mb-0">
-                    {produtosPorCategoria.map((item) => (
-                      <li key={item.categoria} className="d-flex justify-content-between">
-                        <span>{item.categoria}</span>
-                        <span className="fw-bold">{item.qtd}</span>
-                      </li>
-                    ))}
-                  </ul>
                 </div>
               </div>
             </div>
