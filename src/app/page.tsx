@@ -2,12 +2,25 @@
 
 import ListagemProdutos from "./components/ListagemProdutos/ListagemProdutos";
 import { useRouter } from "next/navigation";
+import { useProdutosContext } from "./components/produtosProvider/produtosProvider";
 
 
 export default function App() {
-
   const router = useRouter();
-  
+  const { produtos } = useProdutosContext();
+
+  // Totais
+  const totalProdutos = produtos.length;
+  const categoriasUnicas = Array.from(new Set(produtos.map((p) => p.category?.name)));
+
+  const totalCategorias = categoriasUnicas.length;
+
+  // Quantidade por categoria
+  const produtosPorCategoria = categoriasUnicas.map((cat) => ({
+    categoria: cat || "Sem categoria",
+    qtd: produtos.filter((p) => p.category?.name === cat).length,
+  }));
+
   return (
     <main className="bg-dark min-vh-100 py-5 text-light">
       <div className="container">
@@ -17,43 +30,56 @@ export default function App() {
             <i className="bi bi-box-seam me-2 text-warning"></i>
             Painel de Produtos
           </h1>
-          <button className="btn btn-warning fw-semibold shadow-sm" onClick={() => router.push("/novo")} >
+          <button
+            className="btn btn-warning fw-semibold shadow-sm"
+            onClick={() => router.push("/novo")}
+          >
             <i className="bi bi-plus-circle me-1"></i> Adicionar Produto
           </button>
         </div>
 
-        {/* PAINEL DE INFORMAÇÕES */}
-        <div className="row g-4 mb-5">
-          <div className="col-12 col-md-4">
-            <div className="card bg-secondary text-light shadow-sm border-0 rounded-4 h-100">
-              <div className="card-body d-flex flex-column align-items-start">
-                <div className="d-flex align-items-center mb-2">
-                  <i className="bi bi-check-circle-fill text-success me-2 fs-4"></i>
-                  <h6 className="text-light mb-0">Produtos Ativos</h6>
+        {/* PAINEL ÚNICO DE INFORMAÇÕES */}
+        <div className="card bg-secondary text-light shadow-sm border-0 rounded-4 mb-5">
+          <div className="card-body">
+            <div className="row g-4">
+              {/* Total de Produtos */}
+              <div className="col-12 col-md-4">
+                <div className="d-flex align-items-center">
+                  <i className="bi bi-box-seam text-warning me-2 fs-3"></i>
+                  <div>
+                    <h6 className="mb-0">Total de Produtos</h6>
+                    <h3 className="fw-bold mt-1">{totalProdutos}</h3>
+                  </div>
                 </div>
-                <h3 className="fw-bold mt-2">128</h3>
               </div>
-            </div>
-          </div>
-          <div className="col-12 col-md-4">
-            <div className="card bg-secondary text-light shadow-sm border-0 rounded-4 h-100">
-              <div className="card-body d-flex flex-column align-items-start">
-                <div className="d-flex align-items-center mb-2">
-                  <i className="bi bi-exclamation-triangle-fill text-danger me-2 fs-4"></i>
-                  <h6 className="text-light mb-0">Estoque Baixo</h6>
+
+              {/* Total de Categorias */}
+              <div className="col-12 col-md-4">
+                <div className="d-flex align-items-center">
+                  <i className="bi bi-tags-fill text-info me-2 fs-3"></i>
+                  <div>
+                    <h6 className="mb-0">Total de Categorias</h6>
+                    <h3 className="fw-bold mt-1">{totalCategorias}</h3>
+                  </div>
                 </div>
-                <h3 className="fw-bold mt-2">14</h3>
               </div>
-            </div>
-          </div>
-          <div className="col-12 col-md-4">
-            <div className="card bg-secondary text-light shadow-sm border-0 rounded-4 h-100">
-              <div className="card-body d-flex flex-column align-items-start">
-                <div className="d-flex align-items-center mb-2">
-                  <i className="bi bi-tags-fill text-info me-2 fs-4"></i>
-                  <h6 className="text-light mb-0">Categorias</h6>
+
+              {/* Produtos por Categoria */}
+              <div className="col-12 col-md-4">
+                <div>
+                  <div className="d-flex align-items-center mb-2">
+                    <i className="bi bi-diagram-3-fill text-success me-2 fs-3"></i>
+                    <h6 className="mb-0">Produtos por Categoria</h6>
+                  </div>
+                  <ul className="list-unstyled ms-1 mb-0">
+                    {produtosPorCategoria.map((item) => (
+                      <li key={item.categoria} className="d-flex justify-content-between">
+                        <span>{item.categoria}</span>
+                        <span className="fw-bold">{item.qtd}</span>
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <h3 className="fw-bold mt-2">9</h3>
               </div>
             </div>
           </div>
